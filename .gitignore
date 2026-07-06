@@ -26,3 +26,5 @@ Thumbs.db
 *.log
 *.sqlite
 CLAUDE.md
+# Local markdown preview symlink (maps /static/... paths to workshop assets)
+/static

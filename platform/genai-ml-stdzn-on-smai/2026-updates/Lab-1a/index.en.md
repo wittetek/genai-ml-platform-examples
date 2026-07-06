@@ -22,7 +22,7 @@ Our CloudFormation template creates a production-ready ML governance environment
 1. Navigate to **CloudFormation Console** → **Stacks** → **sagemaker-domain-with-vpc**
 2. Review the **Resources** and **Outputs** tabs
 
-![CloudFormation Stack](/static/images/lab-1/sm-ai-gov-cloudformation.png)
+![CloudFormation Stack](/static/images/lab-1/sm-ai-gov-cloudformation-updated.png)
 
 3. Take the note of **GrantsBucketName** and **DataBucketName** from **Outputs** tabs. You will need these buckets later in labs. 
 
@@ -54,19 +54,19 @@ This lab guides you through setting up a complete AI governance environment. Her
 User profiles serve as the identity foundation within your SageMaker AI domain, enabling personalized access control and resource management.
 
 **Steps:**
-1. Navigate to **Amazon SageMaker AI** → **Domains** → **sagemaker-ai-gov-Domain**
+1. Navigate to **Amazon SageMaker AI** → **Domains** → **smai-genai-ml-std-domain**
 
-![Domain User Profile](/static/images/lab-1/sm-ai-domain.png)
+![Domain User Profile](/static/images/lab-1/sm-ai-domain-updated.png)
 
 2. Select the **User profiles** tab
 
-![Domain User Profile](/static/images/lab-1/userprofile.png)
+![Domain User Profile](/static/images/lab-1/userprofile-updated.png)
 
 3. Click on each of the users to see their details and locate the role:
-   - **userA**: Assigned `sagemaker-ai-gov-usera-role`
-   - **userB**: Assigned `sagemaker-ai-gov-userb-role`
+   - **userA**: Assigned `smai-genai-ml-std-usera-role`
+   - **userB**: Assigned `smai-genai-ml-std-userb-role`
 
-![Domain User Profile](/static/images/lab-1/rolea.png)
+![Domain User Profile](/static/images/lab-1/rolea-updated.png)
 
 Each user profile provides role-based access control with least privilege principles and complete audit trails.
 
@@ -75,18 +75,18 @@ Each user profile provides role-based access control with least privilege princi
 SageMaker AI domains support IAM and Identity Center authentication modes. This workshop uses **IAM mode** authentication.
 
 **Verification Steps:**
-1. Navigate to **Amazon SageMaker AI** → **Domains** → **sagemaker-ai-gov-Domain**
+1. Navigate to **Amazon SageMaker AI** → **Domains** → **smai-genai-ml-std-domain**
 2. Select **Domain settings** tab
 3. Locate **Authentication method** field showing "IAM"
 
-![Domain Authentication Mode](/static/images/lab-1/sm-domain-auth.png)
+![Domain Authentication Mode](/static/images/lab-1/sm-domain-auth-updated.png)
 
 ## 3. VPC Security
 
 Your SageMaker domain operates in VPCOnly mode, providing enterprise-grade network security by isolating all ML workloads within a private network boundary.
 
 **Verification Steps:**
-1. Navigate to **Amazon SageMaker AI** → **Domains** → **sagemaker-ai-gov-Domain**
+1. Navigate to **Amazon SageMaker AI** → **Domains** → **smai-genai-ml-std-domain**
 2. Select **Domain settings** → **Network** section
 3. Observe VPCOnly mode, VPC ID, private subnets, and security groups
 
@@ -104,44 +104,48 @@ S3 Access Grants provide fine-grained access control with automatic enforcement 
 
 | User Role | Accessible Prefixes | Access Level |
 |-----------|-------------------|-------------|
-| `sagemaker-ai-gov-usera-role` | `Product/*`, `UserA/*` | Read/Write |
-| `sagemaker-ai-gov-userb-role` | `Product/*`, `UserB/*` | Read/Write |
+| `smai-genai-ml-std-usera-role` | `Product/*`, `UserA/*` | Read/Write |
+| `smai-genai-ml-std-userb-role` | `Product/*`, `UserB/*` | Read/Write |
 
 **Testing Data Access:**
-1. Navigate to **Amazon SageMaker AI** → **Domains** → **sagemaker-ai-gov-Domain** → **User profiles** and click **Open Studio** for **userA**
+1. Navigate to **Amazon SageMaker AI** → **Domains** → **smai-genai-ml-std-domain** → **User profiles** and click **Open Studio** for **userA**
 
-![UserA Studio](/static/images/lab-1/userAjupitor.png)
+![UserA Studio](/static/images/lab-1/userAjupitor-updated.png)
 
-2. Open **JupyterLab**, click **run** for **usera-jl-space** and wait for notebook to be ready. 
+2. Press Skip Tour for now if prompted.
+
+![Skip Tour](/static/images/lab-1/skiptour.png)
+
+3. Open **JupyterLab**, click **run** for **usera-jl-space** and wait for notebook to be ready. 
 
 ![UserA notebook ](/static/images/lab-1/useranotebook.png)
 
-3. Once ready click **Open**
-4. Open `user-data-governance.ipynb` notebook
+4. Once ready click **Open**
+5. Open `lab-1/user-data-governance.ipynb` notebook
 
-![UserA notebook ](/static/images/lab-1/notebook.png)
+![UserA notebook ](/static/images/lab-1/notebook-updated.png)
 
-5. Run each cell and find place where you would be asked to place bucket name you noted from the CloudFormation Outputs tab (step 3 in Infrastructure Overview).
+6. Run each cell (highlight cell and shift-enter) and find place where you would be asked to place bucket name you noted from the CloudFormation Outputs tab (step 3 in Infrastructure Overview).
 
 ![Cell bucket ](/static/images/lab-1/cellbucket.png)
 
-6. Test authorized access (UserA/abalone.csv) - you should have access.
-7. Test unauthorized access (UserB/abalone.csv) - should fail
+7. Test authorized access (UserA/abalone.csv) - you should have access.
+8. Test unauthorized access (UserB/abalone.csv) - should fail
 
 **Understanding Access Grants:**
 1. Navigate to **S3 Console** → **Access Grants** → **View details**
 2. Review grant records for each user role
 
-![S3 Access Grants](/static/images/lab-1/s3-access-grants.png)
+![S3 Access Grants](/static/images/lab-1/s3-access-grants-updated.png)
 
 ## 5. [Optional] Private Spaces
 
 Private spaces provide dedicated, secure development environments for individual users.
 
 **Creating Your Private Space:**
-1. Navigate to **Amazon SageMaker AI** → **Domains** → **sagemaker-ai-gov-Domain** → **User profiles** → **userB** → **Open Studio**
+1. Navigate to **Amazon SageMaker AI** → **Domains** → **smai-genai-ml-std-domain** → **User profiles** → **userB** → **Open Studio**
 
-![User Profile B](/static/images/lab-1/userprofileB.png)
+![User Profile B](/static/images/lab-1/userprofileB-updated.png)
 
 2. Select **JupyterLab** → **Create JupyterLab Space**
 3. Configure:
