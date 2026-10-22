@@ -10,7 +10,7 @@
   "MODEL_PACKAGE_GROUP_NAME": "llama-finetuned-models",
   "PROCESSING_INSTANCE_TYPE": "ml.m5.xlarge",
   "PROCESSING_INSTANCE_COUNT": 1,
-  "EPOCHS": "4",
+  "EPOCHS": "2",
   "MAX_INPUT_LENGTH": "2048",
   "INSTRUCTION_TUNED": "True"
 }

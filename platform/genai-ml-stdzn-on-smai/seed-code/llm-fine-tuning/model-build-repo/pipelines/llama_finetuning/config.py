@@ -56,7 +56,7 @@ class Config:
     PROCESSING_INSTANCE_COUNT: int = 1
     
     # Training Hyperparameters
-    EPOCHS: str = "4"
+    EPOCHS: str = "2"
     MAX_INPUT_LENGTH: str = "2048"
     INSTRUCTION_TUNED: str = "True"
     

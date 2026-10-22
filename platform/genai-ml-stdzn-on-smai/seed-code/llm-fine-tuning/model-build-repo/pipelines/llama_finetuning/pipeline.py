@@ -120,7 +120,7 @@ def get_pipeline(
                 "MLFLOW_EXPERIMENT_NAME": f"{config.PIPELINE_NAME}-experiment"
             },
             hyperparameters={
-                "epochs": config.EPOCHS,
+                "epoch": config.EPOCHS,
                 "instruction_tuned": config.INSTRUCTION_TUNED,
                 "max_input_length": config.MAX_INPUT_LENGTH,
             },
