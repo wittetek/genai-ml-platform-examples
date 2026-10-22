@@ -109,6 +109,7 @@ def get_pipeline(
         name="FineTuneLlama",
         estimator=JumpStartEstimator(
             model_id=config.MODEL_ID,
+            model_version=config.MODEL_VERSION,
             instance_type=config.TRAINING_INSTANCE_TYPE,
             instance_count=1,
             role=config.SAGEMAKER_ROLE,
@@ -163,7 +164,11 @@ def get_pipeline(
             content_types=["application/json"],
             response_types=["application/json"],
             # List of supported GPU instance types for LLaMA inference
+            # Includes every type in model-deploy-repo/deploy-config.json.
             inference_instances=[
+                "ml.g6.xlarge",
+                "ml.g6.2xlarge",
+                "ml.g6.4xlarge",
                 "ml.g5.xlarge",
                 "ml.g5.2xlarge", 
                 "ml.g5.4xlarge",

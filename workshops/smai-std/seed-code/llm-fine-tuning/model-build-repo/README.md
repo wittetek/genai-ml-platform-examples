@@ -97,7 +97,8 @@ The pipeline uses a JSON configuration file with the following parameters:
 | `S3_BUCKET` | S3 bucket for pipeline artifacts | Required |
 | `S3_PREFIX` | S3 prefix for organizing files | `llama-finetuning` |
 | `MODEL_ID` | JumpStart model ID | `meta-textgeneration-llama-2-7b-f` |
-| `INSTANCE_TYPE` | Training instance type | `ml.g5.2xlarge` |
+| `MODEL_VERSION` | JumpStart model version (pinned, same as Lab 3b) | `1.1.9` |
+| `TRAINING_INSTANCE_TYPE` | Training instance type | `ml.g4dn.12xlarge` |
 | `PIPELINE_NAME` | Name of the SageMaker pipeline | `llama-finetuning-pipeline` |
 | `MODEL_PACKAGE_GROUP_NAME` | Model registry group name | `llama-finetuned-models` |
 | `MLFLOW_TRACKING_ARN` | MLflow tracking server ARN |
@@ -144,7 +145,7 @@ phases:
 
 1. **Role permissions**: Ensure your SageMaker role has the necessary permissions for S3, SageMaker, and other AWS services.
 
-2. **Instance availability**: GPU instances like `ml.g5.2xlarge` may not be available in all regions or may require quota increases.
+2. **Instance availability**: Training defaults to `ml.g4dn.12xlarge` (4x NVIDIA T4), the same type Lab 3b uses. It is supported for this model and draws on a different capacity pool than the g5 family, which is often exhausted in workshop Regions. You do not need to change it. If the training job fails with `CapacityError: Unable to provision requested ML compute capacity`, set `TRAINING_INSTANCE_TYPE` in `configs/dev-config.json` to another supported type, commit, and push. The type may also need a service quota increase.
 
 3. **S3 permissions**: Verify that your role can read/write to the specified S3 bucket.
 

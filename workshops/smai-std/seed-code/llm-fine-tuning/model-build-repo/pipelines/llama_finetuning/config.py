@@ -30,10 +30,14 @@ class Config:
     
     # Model Configuration
     MODEL_ID: str = "meta-textgeneration-llama-2-7b-f"
-    MODEL_VERSION: str = "*"  # Use latest version
+    # Pinned to the JumpStart 1.x model contract used by Lab 3b, so the
+    # container and supported-instance list do not drift between runs.
+    MODEL_VERSION: str = "1.1.9"
     
     # Instance Types for different steps
-    TRAINING_INSTANCE_TYPE: str = "ml.g5.2xlarge"
+    # ml.g4dn.12xlarge (4x T4) matches Lab 3b. It draws on a different capacity
+    # pool than g5, which is often exhausted in workshop Regions.
+    TRAINING_INSTANCE_TYPE: str = "ml.g4dn.12xlarge"
     BATCH_TRANSFORM_INSTANCE_TYPE: str = "ml.g5.2xlarge"
     
     # Deprecated - kept for backward compatibility
