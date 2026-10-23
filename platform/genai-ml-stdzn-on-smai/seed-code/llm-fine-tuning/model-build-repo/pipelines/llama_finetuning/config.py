@@ -35,12 +35,16 @@ class Config:
     MODEL_VERSION: str = "1.1.9"
     
     # Instance Types for different steps
-    # Training tries each type in TRAINING_INSTANCE_POOL in order (cheapest
-    # per job first). run_pipeline.py moves to the next type when a type has
-    # no capacity or quota, or its training job stays Pending longer than
-    # TRAINING_PENDING_TIMEOUT_SECONDS. TRAINING_INSTANCE_TYPE is used only
-    # when the pool is empty (backward compatible single-type setup).
-    TRAINING_INSTANCE_TYPE: str = "ml.g5.2xlarge"
+    # Training tries each type in TRAINING_INSTANCE_POOL in order.
+    # run_pipeline.py moves to the next type when a type has no capacity or
+    # quota, or its training job stays Pending longer than
+    # TRAINING_PENDING_TIMEOUT_SECONDS. g4dn.12xlarge goes first: in us-east-1
+    # testing it got capacity when the g5 types did not, and with its
+    # 1-epoch / 200-sample override it is about the cheapest per job. The g5
+    # types are fallbacks. TRAINING_INSTANCE_TYPE is used only when the pool
+    # is empty (backward compatible single-type setup); keep it equal to the
+    # first pool entry.
+    TRAINING_INSTANCE_TYPE: str = "ml.g4dn.12xlarge"
     TRAINING_INSTANCE_POOL: list = field(default_factory=list)
     TRAINING_PENDING_TIMEOUT_SECONDS: int = 360
     # Per-type hyperparameter overrides applied on top of the base values.

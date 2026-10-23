@@ -5,8 +5,8 @@
   "S3_PREFIX": "llama-finetuning",
   "MODEL_ID": "meta-textgeneration-llama-3-2-3b",
   "MODEL_VERSION": "1.1.9",
-  "TRAINING_INSTANCE_TYPE": "ml.g5.2xlarge",
-  "TRAINING_INSTANCE_POOL": ["ml.g5.2xlarge", "ml.g5.12xlarge", "ml.g4dn.12xlarge"],
+  "TRAINING_INSTANCE_TYPE": "ml.g4dn.12xlarge",
+  "TRAINING_INSTANCE_POOL": ["ml.g4dn.12xlarge", "ml.g5.2xlarge", "ml.g5.12xlarge"],
   "TRAINING_PENDING_TIMEOUT_SECONDS": 360,
   "TRAINING_HP_OVERRIDES": {
     "ml.g4dn.12xlarge": {"epoch": "1", "max_train_samples": "200"}
