@@ -1,5 +1,5 @@
 import os
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Optional
 
 
@@ -35,9 +35,20 @@ class Config:
     MODEL_VERSION: str = "1.1.9"
     
     # Instance Types for different steps
-    # ml.g4dn.12xlarge (4x T4) matches Lab 3b. It draws on a different capacity
-    # pool than g5, which is often exhausted in workshop Regions.
-    TRAINING_INSTANCE_TYPE: str = "ml.g4dn.12xlarge"
+    # Training tries each type in TRAINING_INSTANCE_POOL in order (cheapest
+    # per job first). run_pipeline.py moves to the next type when a type has
+    # no capacity or quota, or its training job stays Pending longer than
+    # TRAINING_PENDING_TIMEOUT_SECONDS. TRAINING_INSTANCE_TYPE is used only
+    # when the pool is empty (backward compatible single-type setup).
+    TRAINING_INSTANCE_TYPE: str = "ml.g5.2xlarge"
+    TRAINING_INSTANCE_POOL: list = field(default_factory=list)
+    TRAINING_PENDING_TIMEOUT_SECONDS: int = 600
+    # Per-type hyperparameter overrides applied on top of the base values.
+    # g4dn.12xlarge (4x T4) is about 4x slower per epoch than g5, so it trains
+    # 1 epoch on a 400-sample subset to keep the lab within its time budget.
+    TRAINING_HP_OVERRIDES: dict = field(default_factory=lambda: {
+        "ml.g4dn.12xlarge": {"epoch": "1", "max_train_samples": "400"},
+    })
     BATCH_TRANSFORM_INSTANCE_TYPE: str = "ml.g5.2xlarge"
     
     # Deprecated - kept for backward compatibility
@@ -60,6 +71,12 @@ class Config:
     MAX_INPUT_LENGTH: str = "2048"
     INSTRUCTION_TUNED: str = "True"
     
+    def training_pool(self) -> list:
+        """Ordered, de-duplicated training instance types to try."""
+        return list(dict.fromkeys(
+            self.TRAINING_INSTANCE_POOL or [self.TRAINING_INSTANCE_TYPE]
+        ))
+
     @classmethod
     def from_file(cls, config_file: str) -> 'Config':
         """Load configuration from a file"""
