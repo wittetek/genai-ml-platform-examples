@@ -100,8 +100,8 @@ The pipeline uses a JSON configuration file with the following parameters:
 | `MODEL_VERSION` | JumpStart model version (pinned, same as Lab 3b) | `1.1.9` |
 | `TRAINING_INSTANCE_TYPE` | Training instance type. Used only when `TRAINING_INSTANCE_POOL` is empty | `ml.g5.2xlarge` |
 | `TRAINING_INSTANCE_POOL` | Training instance types to try, in order (cheapest per job first) | `["ml.g5.2xlarge", "ml.g5.12xlarge", "ml.g4dn.12xlarge"]` |
-| `TRAINING_PENDING_TIMEOUT_SECONDS` | How long a training job may stay Pending before the build tries the next type | `600` |
-| `TRAINING_HP_OVERRIDES` | Per-type hyperparameter overrides, applied on top of the values below | `ml.g4dn.12xlarge`: `epoch` `1`, `max_train_samples` `400` |
+| `TRAINING_PENDING_TIMEOUT_SECONDS` | How long a training job may stay Pending before the build tries the next type | `360` |
+| `TRAINING_HP_OVERRIDES` | Per-type hyperparameter overrides, applied on top of the values below | `ml.g4dn.12xlarge`: `epoch` `1`, `max_train_samples` `200` |
 | `PIPELINE_NAME` | Name of the SageMaker pipeline | `llama-finetuning-pipeline` |
 | `MODEL_PACKAGE_GROUP_NAME` | Model registry group name | `llama-finetuned-models` |
 | `MLFLOW_TRACKING_ARN` | MLflow tracking server ARN |
@@ -148,7 +148,7 @@ phases:
 
 1. **Role permissions**: Ensure your SageMaker role has the necessary permissions for S3, SageMaker, and other AWS services.
 
-2. **Instance availability**: Training uses the first type in `TRAINING_INSTANCE_POOL` that has GPU capacity. `run-pipeline` (called by CodeBuild) tries each type in order. If the training job is still Pending after `TRAINING_PENDING_TIMEOUT_SECONDS`, it stops that execution and starts a new one on the next type. If the training step fails with a quota (`ResourceLimitExceeded`) or capacity (`CapacityError`) error, it moves on as well. The last type is never stopped: its execution stays queued until capacity frees up. So a **Stopped** or **Failed** execution in the list is expected. Monitor the newest one. Preprocessing is cached for one day, so retries skip it. `ml.g4dn.12xlarge` (4x NVIDIA T4) is about 4x slower than g5, so `TRAINING_HP_OVERRIDES` trains it for 1 epoch on 400 samples. The build returns once a training job is running; it does not wait for training to finish. To change the order or the timeout, edit `configs/dev-config.json`, commit, and push.
+2. **Instance availability**: Training uses the first type in `TRAINING_INSTANCE_POOL` that has GPU capacity. `run-pipeline` (called by CodeBuild) tries each type in order. If the training job is still Pending after `TRAINING_PENDING_TIMEOUT_SECONDS`, it stops that execution and starts a new one on the next type. If the training step fails with a quota (`ResourceLimitExceeded`) or capacity (`CapacityError`) error, it moves on as well. The last type is never stopped: its execution stays queued until capacity frees up. So a **Stopped** or **Failed** execution in the list is expected. Monitor the newest one. Preprocessing is cached for one day, so retries skip it. `ml.g4dn.12xlarge` (4x NVIDIA T4) is about 4x slower than g5, so `TRAINING_HP_OVERRIDES` trains it for 1 epoch on 200 samples (`max_train_samples` must not exceed the 370-row training split). The build returns once a training job is running; it does not wait for training to finish. To change the order or the timeout, edit `configs/dev-config.json`, commit, and push.
 
 3. **S3 permissions**: Verify that your role can read/write to the specified S3 bucket.
 
