@@ -62,6 +62,9 @@ def get_pipeline_custom_tags(module_name, args, tags):
     """
     try:
         _imports = __import__(module_name, fromlist=["get_pipeline_custom_tags"])
+        # Custom tags are optional; keep the base tags when the module has none.
+        if not hasattr(_imports, "get_pipeline_custom_tags"):
+            return tags
         kwargs = convert_struct(args)
         return _imports.get_pipeline_custom_tags(
             tags, 
